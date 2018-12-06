@@ -2,7 +2,6 @@
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 using NxtLvl.Core.Common;
-using System;
 using System.Threading.Tasks;
 
 namespace NxtLvl.Azure.Data
@@ -42,11 +41,15 @@ namespace NxtLvl.Azure.Data
             _cloudTable = client.GetTableReference(_tableName);
 
             await _cloudTable.CreateIfNotExistsAsync();
+
+            _initialized = true;
         }
 
         public async Task<TEntity> CreateAsync(TEntity item)
         {
             Validate.ArgumentIsNotNull(item, nameof(item));
+
+            await Initialize();
 
             var operation = TableOperation.Insert(item);
 
@@ -59,6 +62,8 @@ namespace NxtLvl.Azure.Data
         {
             Validate.ArgumentIsNotNull(item, nameof(item));
 
+            await Initialize();
+
             var operation = TableOperation.Delete(item);
 
             var result = await _cloudTable.ExecuteAsync(operation);
@@ -66,14 +71,30 @@ namespace NxtLvl.Azure.Data
             return (TEntity)result.Result;
         }
 
-        public Task<TEntity> GetAsync(TableStorageId id)
+        public async Task<TEntity> GetAsync(TableStorageId id)
         {
-            throw new NotImplementedException();
+            Validate.ArgumentIsNotNull(id, nameof(id));
+
+            await Initialize();
+
+            var operation = TableOperation.Retrieve<TEntity>(id.PartitionKey, id.RowKey);
+
+            var result = await _cloudTable.ExecuteAsync(operation);
+
+            return (TEntity)result.Result;
         }
 
-        public Task<TEntity> UpdateAsync(TEntity item)
+        public async Task<TEntity> UpdateAsync(TEntity item)
         {
-            throw new NotImplementedException();
+            Validate.ArgumentIsNotNull(item, nameof(item));
+
+            await Initialize();
+
+            var operation = TableOperation.Replace(item);
+
+            var result = await _cloudTable.ExecuteAsync(operation);
+
+            return (TEntity)result.Result;
         }
     }
 }
