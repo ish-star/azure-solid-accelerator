@@ -24,10 +24,15 @@ namespace NxtLvl.Azure.Data
 
         public CosmosEntityStore(ILog log, string uri, string authKey, string databaseName, string collectionName)
         {
-            _log = log ?? throw new ArgumentNullException(nameof(log));
+            Validate.ArgumentIsNotNull(log, nameof(log));
+            Validate.ArgumentIsNotNullOrEmpty(uri, nameof(uri));
+            Validate.ArgumentIsNotNullOrEmpty(authKey, nameof(authKey));
+            Validate.ArgumentIsNotNullOrEmpty(databaseName, nameof(databaseName));
+            Validate.ArgumentIsNotNullOrEmpty(collectionName, nameof(collectionName));
 
-            _log.Info($"The CosmosEntityStore with URI:{uri} for Database:{databaseName} and Collection:{collectionName} has begun construction.");
+            log.Info($"The CosmosEntityStore with URI: {uri} for Database: {databaseName} and Collection: {collectionName} has begun construction.");
 
+            _log = log;
             _uri = new Uri(uri);
             _authKey = authKey;
             _databaseName = databaseName;
@@ -49,8 +54,10 @@ namespace NxtLvl.Azure.Data
             _initialized = true;
         }
 
-        public async Task<TEntity> CreateAsync(TEntity item)
+        public async Task<TEntity> AddAsync(TEntity item)
         {
+            Validate.ArgumentIsNotNull(item, nameof(item));
+
             await Initialize();
 
             if (!item.Id.HasValue)
@@ -99,6 +106,8 @@ namespace NxtLvl.Azure.Data
 
         public async Task<IList<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate)
         {
+            Validate.ArgumentIsNotNull(predicate, nameof(predicate));
+
             await Initialize();
 
             return await Task.Run(() => _client.CreateDocumentQuery<TEntity>(_collection.DocumentsLink).Where(predicate).ToList());
@@ -106,6 +115,8 @@ namespace NxtLvl.Azure.Data
 
         public async Task<TEntity> UpdateAsync(TEntity item)
         {
+            Validate.ArgumentIsNotNull(item, nameof(item));
+
             await Initialize();
 
             if (!item.Id.HasValue)

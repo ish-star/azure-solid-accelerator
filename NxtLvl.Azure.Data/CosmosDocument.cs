@@ -12,11 +12,11 @@ namespace NxtLvl.Azure.Data
             NamingStrategy = new CamelCaseNamingStrategy()
         };
 
+        [JsonProperty("id")]
         public Guid? Id { get; set; }
         
+        [JsonProperty("systemType")]
         public string SystemType { get; set; }
-
-        
 
         public override string ToString()
         {

@@ -45,7 +45,7 @@ namespace NxtLvl.Azure.Data
             _initialized = true;
         }
 
-        public async Task<TEntity> CreateAsync(TEntity item)
+        public async Task<TEntity> AddAsync(TEntity item)
         {
             Validate.ArgumentIsNotNull(item, nameof(item));
 
