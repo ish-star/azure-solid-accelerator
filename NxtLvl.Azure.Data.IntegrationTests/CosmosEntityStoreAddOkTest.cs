@@ -6,25 +6,27 @@ using System.Threading.Tasks;
 namespace NxtLvl.Azure.Data.IntegrationTests
 {
     [TestClass]
-    public class CosmosEntityStoreAddTest
+    public class CosmosEntityStoreAddOkTest
     {
         CosmosEntityStore<TestCosmosEntity> _cosmosEntityStore;
-
         TestCosmosEntity _result;
 
-        [TestMethod]
-        public async Task AddEntityToCosmosEntityStore()
+        [TestInitialize]
+        public async Task Initialize()
         {
-            var log = LogManager.GetLogger(typeof(CosmosEntityStoreAddTest));
+            var log = LogManager.GetLogger(typeof(CosmosEntityStoreAddOkTest));
 
             _cosmosEntityStore = new CosmosEntityStore<TestCosmosEntity>(log,
                                                                          Configuration.GetComsosConfig()["uri"],
                                                                          Configuration.GetComsosConfig()["authKey"],
                                                                          Configuration.GetComsosConfig()["databaseName"],
                                                                          Configuration.GetComsosConfig()["collectionName"]);
-
             await _cosmosEntityStore.Initialize();
+        }
 
+        [TestMethod]
+        public async Task CosmosEntityStoreAdd_Ok()
+        {
             var testEntity = new TestCosmosEntity() { StringField = "TestString" };
 
             _result = await _cosmosEntityStore.AddAsync(testEntity);
@@ -38,7 +40,7 @@ namespace NxtLvl.Azure.Data.IntegrationTests
             Assert.AreEqual(_result.Id, gotten.Id);
             Assert.AreEqual(_result.SystemType, gotten.SystemType);
             Assert.AreEqual(_result.StringField, gotten.StringField);
-        }  
+        }
 
         [TestCleanup]
         public async Task Cleanup()

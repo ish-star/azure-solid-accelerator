@@ -10,7 +10,7 @@ namespace NxtLvl.Azure.Data.IntegrationTests
         public static Dictionary<string, string> GetComsosConfig()
         {
             var config = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory())
-                                                   .AddJsonFile("appsettings.json", false, true)
+                                                   .AddJsonFile("myappsettings.json", false, true)
                                                    .Build();
 
             return config.GetSection("cosmosDbSettings")
