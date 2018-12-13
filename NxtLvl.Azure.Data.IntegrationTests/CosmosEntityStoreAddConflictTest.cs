@@ -12,13 +12,12 @@ namespace NxtLvl.Azure.Data.IntegrationTests
     public class CosmosEntityStoreAddConflictTest
     {
         CosmosEntityStore<TestCosmosEntity> _cosmosEntityStore;
-
         TestCosmosEntity _result;
 
         [TestInitialize]
         public async Task Initialize()
         {
-            var log = LogManager.GetLogger(typeof(CosmosEntityStoreAddOkTest));
+            var log = LogManager.GetLogger(GetType());
 
             _cosmosEntityStore = new CosmosEntityStore<TestCosmosEntity>(log,
                                                                          Configuration.GetComsosConfig()["uri"],
@@ -33,7 +32,7 @@ namespace NxtLvl.Azure.Data.IntegrationTests
         }
 
         [TestMethod]
-        public async Task CosmosEntityStoreAdd_Exception()
+        public async Task CosmosEntityStoreAdd_Conflict()
         {
             try
             {

@@ -57,7 +57,7 @@ namespace NxtLvl.Azure.Data.Tests
         }
 
         [Fact]
-        public async Task CosmosEntityStore_CreateAsync_NullItem()
+        public async Task CosmosEntityStore_AddAsync_NullItem()
         {
             var log = new Mock<ILog>();
 

@@ -21,7 +21,7 @@ namespace NxtLvl.Azure.Data
             Validate.ArgumentIsNotNullOrEmpty(connection, nameof(connection));
             Validate.ArgumentIsNotNullOrEmpty(tableName, nameof(tableName));
 
-            _log.Info($"The TableStorageEntityStore for Table:{tableName} and has begun construction.");
+            log.Info($"The TableStorageEntityStore for Table:{tableName} and has begun construction.");
 
             _log = log;
             _connection = connection;
@@ -73,8 +73,6 @@ namespace NxtLvl.Azure.Data
 
         public async Task<TEntity> GetAsync(TableStorageId id)
         {
-            Validate.ArgumentIsNotNull(id, nameof(id));
-
             await Initialize();
 
             var operation = TableOperation.Retrieve<TEntity>(id.PartitionKey, id.RowKey);
@@ -96,5 +94,10 @@ namespace NxtLvl.Azure.Data
 
             return (TEntity)result.Result;
         }
+
+        //private void ProcessStatusCode(int statusCode)
+        //{
+        //    if (statusCode > )
+        //}
     }
 }

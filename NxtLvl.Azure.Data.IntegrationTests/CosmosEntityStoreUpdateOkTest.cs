@@ -1,15 +1,12 @@
 ﻿using log4net;
-using Microsoft.Azure.Documents;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NxtLvl.Azure.Data.IntegrationTests.TestObjects;
-using System;
-using System.Net;
 using System.Threading.Tasks;
 
 namespace NxtLvl.Azure.Data.IntegrationTests
 {
     [TestClass]
-    public class CosmosEntityStoreDeleteOkTest
+    public class CosmosEntityStoreUpdateOkTest
     {
         CosmosEntityStore<TestCosmosEntity> _cosmosEntityStore;
         TestCosmosEntity _result;
@@ -32,27 +29,24 @@ namespace NxtLvl.Azure.Data.IntegrationTests
         }
 
         [TestMethod]
-        public async Task CosmosEntityStoreDelete_Ok()
+        public async Task CosmosEntityStoreUpdate_Ok()
         {
-            var deletedEntity = await _cosmosEntityStore.DeleteAsync(_result);
+            _result.StringField = "NewStringValue";
+            _result = await _cosmosEntityStore.UpdateAsync(_result);
 
-            Assert.AreEqual(_result.Id, deletedEntity.Id);
-            Assert.AreEqual(_result.SystemType, deletedEntity.SystemType);
-            Assert.AreEqual(_result.StringField, deletedEntity.StringField);
+            var gottenAfterUpdate = await _cosmosEntityStore.GetAsync(_result.Id.Value);
 
-            try
-            {
-                var notExpectedResult = await _cosmosEntityStore.GetAsync(_result.Id.Value);
+            Assert.AreEqual(_result.Id, gottenAfterUpdate.Id);
+            Assert.AreEqual(_result.SystemType, gottenAfterUpdate.SystemType);
+            Assert.AreEqual(_result.StringField, gottenAfterUpdate.StringField);
+        }
 
-                Assert.Fail("A DocumentClientException was expected to be thrown but no exception was thrown.");
-            }
-            catch (DocumentClientException ex)
+        [TestCleanup]
+        public async Task Cleanup()
+        {
+            if (_result != null)
             {
-                Assert.AreEqual(HttpStatusCode.NotFound, ex.StatusCode);
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail($"A DocumentClientException was expected to be thrown but an exception of type {ex.GetType().Name} was thrown.");
+                var deleted = await _cosmosEntityStore.DeleteAsync(_result);
             }
         }
     }

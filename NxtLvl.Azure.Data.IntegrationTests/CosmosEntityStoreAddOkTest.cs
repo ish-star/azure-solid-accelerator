@@ -14,7 +14,7 @@ namespace NxtLvl.Azure.Data.IntegrationTests
         [TestInitialize]
         public async Task Initialize()
         {
-            var log = LogManager.GetLogger(typeof(CosmosEntityStoreAddOkTest));
+            var log = LogManager.GetLogger(GetType());
 
             _cosmosEntityStore = new CosmosEntityStore<TestCosmosEntity>(log,
                                                                          Configuration.GetComsosConfig()["uri"],

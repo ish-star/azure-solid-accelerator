@@ -17,5 +17,16 @@ namespace NxtLvl.Azure.Data.IntegrationTests
                          .GetChildren()
                          .ToDictionary(c => c.Key, c => c.Value);
         }
+
+        public static Dictionary<string, string> GetTableStorageConfig()
+        {
+            var config = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory())
+                                                   .AddJsonFile("myappsettings.json", false, true)
+                                                   .Build();
+
+            return config.GetSection("tableStorageSettings")
+                         .GetChildren()
+                         .ToDictionary(c => c.Key, c => c.Value);
+        }
     }
 }

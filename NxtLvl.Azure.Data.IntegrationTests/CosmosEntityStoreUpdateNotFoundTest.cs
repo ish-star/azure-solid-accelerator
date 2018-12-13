@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 namespace NxtLvl.Azure.Data.IntegrationTests
 {
     [TestClass]
-    public class CosmosEntityStoreDeleteOkTest
+    public class CosmosEntityStoreUpdateNotFoundTest
     {
         CosmosEntityStore<TestCosmosEntity> _cosmosEntityStore;
-        TestCosmosEntity _result;
+        TestCosmosEntity _testEntity;
 
         [TestInitialize]
         public async Task Initialize()
@@ -26,23 +26,15 @@ namespace NxtLvl.Azure.Data.IntegrationTests
                                                                          Configuration.GetComsosConfig()["collectionName"]);
             await _cosmosEntityStore.Initialize();
 
-            var testEntity = new TestCosmosEntity() { StringField = "TestString" };
-
-            _result = await _cosmosEntityStore.AddAsync(testEntity);
+            _testEntity = new TestCosmosEntity() { Id = Guid.NewGuid(), StringField = "TestString" };
         }
 
         [TestMethod]
-        public async Task CosmosEntityStoreDelete_Ok()
+        public async Task CosmosEntityStoreUpdate_NotFound()
         {
-            var deletedEntity = await _cosmosEntityStore.DeleteAsync(_result);
-
-            Assert.AreEqual(_result.Id, deletedEntity.Id);
-            Assert.AreEqual(_result.SystemType, deletedEntity.SystemType);
-            Assert.AreEqual(_result.StringField, deletedEntity.StringField);
-
             try
             {
-                var notExpectedResult = await _cosmosEntityStore.GetAsync(_result.Id.Value);
+                var notExpectedResult = await _cosmosEntityStore.UpdateAsync(_testEntity);
 
                 Assert.Fail("A DocumentClientException was expected to be thrown but no exception was thrown.");
             }
