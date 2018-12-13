@@ -2,6 +2,9 @@
 {
     public struct TableStorageId
     {
+        public const string ParitionKeyField = "PartitionKey";
+        public const string RowKeyField = "RowKey";
+
         public string PartitionKey { get; set; }
 
         public string RowKey { get; set; }

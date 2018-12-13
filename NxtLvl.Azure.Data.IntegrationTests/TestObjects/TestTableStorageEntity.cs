@@ -1,6 +1,4 @@
-﻿using Microsoft.WindowsAzure.Storage.Table;
-
-namespace NxtLvl.Azure.Data.IntegrationTests.TestObjects
+﻿namespace NxtLvl.Azure.Data.IntegrationTests.TestObjects
 {
     public class TestTableStorageEntity : TableStorageEntity
     {

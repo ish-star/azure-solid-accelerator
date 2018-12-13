@@ -2,11 +2,12 @@
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 using NxtLvl.Core.Common;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace NxtLvl.Azure.Data
 {
-    public class TableStorageEntityStore<TEntity> : IEntityStore<TEntity, TableStorageId>
+    public class TableStorageEntityStore<TEntity> : IEntityStore<TEntity, TableStorageId>, ITableQuery<TEntity>
         where TEntity : class, ITableEntity, new()
     {
         readonly string _connection, _tableName;
@@ -95,9 +96,24 @@ namespace NxtLvl.Azure.Data
             return (TEntity)result.Result;
         }
 
-        //private void ProcessStatusCode(int statusCode)
-        //{
-        //    if (statusCode > )
-        //}
+        public async Task<IList<TEntity>> FindAsync(TableQuery<TEntity> query)
+        {
+            Validate.ArgumentIsNotNull(query, nameof(query));
+
+            await Initialize();
+
+            var results = new List<TEntity>();
+            TableContinuationToken token = null;
+
+            do
+            {
+                var segment = await _cloudTable.ExecuteQuerySegmentedAsync(query, token);
+                token = segment.ContinuationToken;
+                results.AddRange(segment.Results);
+
+            } while (token != null);
+
+            return results;
+        }
     }
 }

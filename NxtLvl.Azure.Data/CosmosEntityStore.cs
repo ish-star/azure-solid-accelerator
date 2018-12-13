@@ -10,7 +10,7 @@ using NxtLvl.Core.Common;
 
 namespace NxtLvl.Azure.Data
 {
-    public class CosmosEntityStore<TEntity> : IEntityStore<TEntity, Guid>, IEntityQuery<TEntity>
+    public class CosmosEntityStore<TEntity> : IEntityStore<TEntity, Guid>, ILinqQuery<TEntity>
         where TEntity : CosmosDocument, new()
     {
         readonly string _authKey, _databaseName, _collectionName;

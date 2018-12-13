@@ -72,5 +72,17 @@ namespace NxtLvl.Azure.Data.Tests
 
             Assert.Equal("Value cannot be null.\r\nParameter name: item", ex.Message);
         }
+
+        [Fact]
+        public async Task TableStorageEntityStore_FindAsync_NullQuery()
+        {
+            var log = new Mock<ILog>();
+
+            var tableStorageEntityStore = new TableStorageEntityStore<TableEntity>(log.Object, "TestConnection", "TableName");
+
+            var ex = await Assert.ThrowsAsync<ArgumentNullException>(() => tableStorageEntityStore.FindAsync(null));
+
+            Assert.Equal("Value cannot be null.\r\nParameter name: query", ex.Message);
+        }
     }
 }
