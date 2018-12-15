@@ -63,7 +63,7 @@ namespace NxtLvl.Azure.Data.Tests
 
             var cosmosEntityStore = new CosmosEntityStore<CosmosDocument>(log.Object, "http://localhost/", "authKey", "databaseName", "collectionName");
 
-            var ex = await Assert.ThrowsAsync<ArgumentNullException>(() => cosmosEntityStore.AddAsync(null));
+            var ex = await Assert.ThrowsAsync<ArgumentNullException>(() => cosmosEntityStore.AddAsync<CosmosDocument>(null));
 
             Assert.Equal("Value cannot be null.\r\nParameter name: item", ex.Message);
         }
@@ -75,7 +75,7 @@ namespace NxtLvl.Azure.Data.Tests
 
             var cosmosEntityStore = new CosmosEntityStore<CosmosDocument>(log.Object, "http://localhost/", "authKey", "databaseName", "collectionName");
 
-            var ex = await Assert.ThrowsAsync<ArgumentNullException>(() => cosmosEntityStore.DeleteAsync(null));
+            var ex = await Assert.ThrowsAsync<ArgumentNullException>(() => cosmosEntityStore.DeleteAsync<CosmosDocument>(null));
 
             Assert.Equal("Value cannot be null.\r\nParameter name: item", ex.Message);
         }
@@ -87,7 +87,7 @@ namespace NxtLvl.Azure.Data.Tests
 
             var cosmosEntityStore = new CosmosEntityStore<CosmosDocument>(log.Object, "http://localhost/", "authKey", "databaseName", "collectionName");
 
-            var ex = await Assert.ThrowsAsync<ArgumentNullException>(() => cosmosEntityStore.FindAsync(null));
+            var ex = await Assert.ThrowsAsync<ArgumentNullException>(() => cosmosEntityStore.FindAsync<CosmosDocument>(null));
 
             Assert.Equal("Value cannot be null.\r\nParameter name: predicate", ex.Message);
         }
@@ -99,7 +99,7 @@ namespace NxtLvl.Azure.Data.Tests
 
             var cosmosEntityStore = new CosmosEntityStore<CosmosDocument>(log.Object, "http://localhost/", "authKey", "databaseName", "collectionName");
 
-            var ex = await Assert.ThrowsAsync<ArgumentNullException>(() => cosmosEntityStore.UpdateAsync(null));
+            var ex = await Assert.ThrowsAsync<ArgumentNullException>(() => cosmosEntityStore.UpdateAsync<CosmosDocument>(null));
 
             Assert.Equal("Value cannot be null.\r\nParameter name: item", ex.Message);
         }

@@ -10,9 +10,15 @@ using NxtLvl.Core.Common;
 
 namespace NxtLvl.Azure.Data
 {
-    public class CosmosEntityStore<TEntity> : IEntityStore<TEntity, Guid>, ILinqQuery<TEntity>
-        where TEntity : CosmosDocument, new()
+    /// <summary>
+    /// Class that encapsluates the complexity of doing simple interactions with the Azure ComsoDB platform.
+    /// </summary>
+    /// <typeparam name="TBase">The base type the CosmosEntityStore is configured to work with.</typeparam>
+    public class CosmosEntityStore<TBase> : IEntityStore<TBase, Guid>, ILinqQuery
+        where TBase : CosmosDocument
     {
+        #region fields
+
         readonly string _authKey, _databaseName, _collectionName;
         readonly Uri _uri;
         readonly ILog _log;
@@ -22,6 +28,18 @@ namespace NxtLvl.Azure.Data
         DocumentCollection _collection;
         bool _initialized;
 
+        #endregion
+
+        #region constructor
+
+        /// <summary>
+        /// The constructor for the CosmosEntityStore class specifying the dependencies and information needed about the Azure ComsoDB platform instance to which you intend to interact.
+        /// </summary>
+        /// <param name="log">log4net's ILog interface which will be used to log class initialization and other events.</param>
+        /// <param name="uri">The URI value of your CosmsoDB instance to which you want to interact.  Available in the Azure Portal.</param>
+        /// <param name="authKey">The Authentication Key to allow access to your CosmosDB instance.</param>
+        /// <param name="databaseName">The name of the database instance inside your CosmosDB instance to which you want to interact.</param>
+        /// <param name="collectionName">The name of the collection instance inside your database instance to which you want to interact.</param>
         public CosmosEntityStore(ILog log, string uri, string authKey, string databaseName, string collectionName)
         {
             Validate.ArgumentIsNotNull(log, nameof(log));
@@ -41,6 +59,16 @@ namespace NxtLvl.Azure.Data
             _log.Info($"The CosmosEntityStore with URI:{uri} for Database:{databaseName} and Collection:{collectionName} has finished construction.");
         }
 
+        #endregion
+
+        #region public methods
+
+        /// <summary>
+        /// Uses the information provided in the constructor on how to access your CosmsoDB instance, and ensures a connection can be made and that the database and collection exist and are ready to accept data interactions.
+        /// </summary>
+        /// <remarks>
+        /// This method should be called only once per instance.  It is recommended to call this method during the initialization or dependency configuration stage of your application to warm up the underlying components to avoid cold call latency.
+        /// </remarks>
         public async Task Initialize()
         {
             if (_initialized)
@@ -54,7 +82,14 @@ namespace NxtLvl.Azure.Data
             _initialized = true;
         }
 
-        public async Task<TEntity> AddAsync(TEntity item)
+        /// <summary>
+        /// Add the provided Entity to the CosmosDB table.
+        /// </summary>
+        /// <typeparam name="TEntity">The type to be used in this method invocation.</typeparam>
+        /// <param name="item">The Entity to add.</param>
+        /// <returns>The added Entity.</returns>
+        public async Task<TEntity> AddAsync<TEntity>(TEntity item)
+            where TEntity : TBase, new()
         {
             Validate.ArgumentIsNotNull(item, nameof(item));
 
@@ -72,7 +107,14 @@ namespace NxtLvl.Azure.Data
             return response;
         }
 
-        public async Task<TEntity> DeleteAsync(TEntity item)
+        /// <summary>
+        /// Delete the provided Entity from the CosmosDB table.
+        /// </summary>
+        /// <typeparam name="TEntity">The type to be used in this method invocation.</typeparam>
+        /// <param name="item">The Entity to delete.</param>
+        /// <returns>The deleted Entity.</returns>
+        public async Task<TEntity> DeleteAsync<TEntity>(TEntity item)
+            where TEntity : TBase, new()
         {
             Validate.ArgumentIsNotNull(item, nameof(item));
 
@@ -90,7 +132,14 @@ namespace NxtLvl.Azure.Data
             return response;
         }
 
-        public async Task<TEntity> GetAsync(Guid id)
+        /// <summary>
+        /// Get the Entity associated with the provided Id from the CosmosDB table.
+        /// </summary>
+        /// <typeparam name="TEntity">The type to be used in this method invocation.</typeparam>
+        /// <param name="id">The Id value of the Entity to get.</param>
+        /// <returns>The Entity associated with the provided Id value.</returns>
+        public async Task<TEntity> GetAsync<TEntity>(Guid id)
+            where TEntity : TBase, new()
         {
             await Initialize();
 
@@ -104,16 +153,29 @@ namespace NxtLvl.Azure.Data
             return response;
         }
 
-        public async Task<IList<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate)
+        /// <summary>
+        /// Find any Entities that satisfy the conditions provided in the Linq predicate from the CosmosDB table.
+        /// </summary>
+        /// <typeparam name="TEntity">The type to be used in this method invocation.</typeparam>
+        /// <param name="predicate">The condition the Entities must satifsy.</param>
+        /// <returns>The Entities that satisfy the condition specified.</returns>
+        public async Task<IList<TItem>> FindAsync<TItem>(Expression<Func<TItem, bool>> predicate)
         {
             Validate.ArgumentIsNotNull(predicate, nameof(predicate));
 
             await Initialize();
 
-            return await Task.Run(() => _client.CreateDocumentQuery<TEntity>(_collection.DocumentsLink).Where(predicate).ToList());
+            return await Task.Run(() => _client.CreateDocumentQuery<TItem>(_collection.DocumentsLink).Where(predicate).ToList());
         }
 
-        public async Task<TEntity> UpdateAsync(TEntity item)
+        /// <summary>
+        /// Add the provided Entity to the CosmosDB table.
+        /// </summary>
+        /// <typeparam name="TEntity">The type to be used in this method invocation.</typeparam>
+        /// <param name="item">The Entity to add.</param>
+        /// <returns>The added Entity.</returns>
+        public async Task<TEntity> UpdateAsync<TEntity>(TEntity item)
+            where TEntity : TBase, new()
         {
             Validate.ArgumentIsNotNull(item, nameof(item));
 
@@ -136,6 +198,10 @@ namespace NxtLvl.Azure.Data
             return response;
         }
 
+        #endregion
+
+        #region private methods
+
         private async Task<Document> GetDocumentAsync(Guid id)
         {
             await Initialize();
@@ -146,5 +212,7 @@ namespace NxtLvl.Azure.Data
 
             return result.Resource;
         }
+
+        #endregion
     }
 }

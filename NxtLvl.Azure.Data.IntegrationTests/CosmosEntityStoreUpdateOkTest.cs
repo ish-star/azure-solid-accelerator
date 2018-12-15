@@ -34,7 +34,7 @@ namespace NxtLvl.Azure.Data.IntegrationTests
             _result.StringField = "NewStringValue";
             _result = await _cosmosEntityStore.UpdateAsync(_result);
 
-            var gottenAfterUpdate = await _cosmosEntityStore.GetAsync(_result.Id.Value);
+            var gottenAfterUpdate = await _cosmosEntityStore.GetAsync<TestCosmosEntity>(_result.Id.Value);
 
             Assert.AreEqual(_result.Id, gottenAfterUpdate.Id);
             Assert.AreEqual(_result.SystemType, gottenAfterUpdate.SystemType);

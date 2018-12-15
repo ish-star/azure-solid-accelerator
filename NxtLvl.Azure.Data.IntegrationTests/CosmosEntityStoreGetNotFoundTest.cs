@@ -34,7 +34,7 @@ namespace NxtLvl.Azure.Data.IntegrationTests
         {
             try
             {
-                var notExpectedResult = await _cosmosEntityStore.GetAsync(_testEntity.Id.Value);
+                var notExpectedResult = await _cosmosEntityStore.GetAsync<TestCosmosEntity>(_testEntity.Id.Value);
 
                 Assert.Fail("A DocumentClientException was expected to be thrown but no exception was thrown.");
             }

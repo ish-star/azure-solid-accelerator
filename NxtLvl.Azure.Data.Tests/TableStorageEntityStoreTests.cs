@@ -12,7 +12,7 @@ namespace NxtLvl.Azure.Data.Tests
         [Fact]
         public void TableStorageEntityStore_DefaultConstructor_NullLog()
         {
-            var ex = Assert.Throws<ArgumentNullException>(() => new TableStorageEntityStore<TableEntity>(null, null, null));
+            var ex = Assert.Throws<ArgumentNullException>(() => new TableStorageEntityStore<TableStorageEntity>(null, null, null));
 
             Assert.Equal("Value cannot be null.\r\nParameter name: log", ex.Message);
         }
@@ -22,7 +22,7 @@ namespace NxtLvl.Azure.Data.Tests
         {
             var log = new Mock<ILog>();
 
-            var ex = Assert.Throws<ArgumentException>(() => new TableStorageEntityStore<TableEntity>(log.Object, null, null));
+            var ex = Assert.Throws<ArgumentException>(() => new TableStorageEntityStore<TableStorageEntity>(log.Object, null, null));
 
             Assert.Equal("Value cannot be null or whitespace.\r\nParameter name: connection", ex.Message);
         }
@@ -32,7 +32,7 @@ namespace NxtLvl.Azure.Data.Tests
         {
             var log = new Mock<ILog>();
 
-            var ex = Assert.Throws<ArgumentException>(() => new TableStorageEntityStore<TableEntity>(log.Object, "TestConnection", null));
+            var ex = Assert.Throws<ArgumentException>(() => new TableStorageEntityStore<TableStorageEntity>(log.Object, "TestConnection", null));
 
             Assert.Equal("Value cannot be null or whitespace.\r\nParameter name: tableName", ex.Message);
         }
@@ -42,9 +42,9 @@ namespace NxtLvl.Azure.Data.Tests
         {
             var log = new Mock<ILog>();
 
-            var tableStorageEntityStore = new TableStorageEntityStore<TableEntity>(log.Object, "TestConnection", "TableName");
+            var tableStorageEntityStore = new TableStorageEntityStore<TableStorageEntity>(log.Object, "TestConnection", "TableName");
 
-            var ex = await Assert.ThrowsAsync<ArgumentNullException>(() => tableStorageEntityStore.AddAsync(null));
+            var ex = await Assert.ThrowsAsync<ArgumentNullException>(() => tableStorageEntityStore.AddAsync<TableStorageEntity>(null));
 
             Assert.Equal("Value cannot be null.\r\nParameter name: item", ex.Message);
         }
@@ -54,9 +54,9 @@ namespace NxtLvl.Azure.Data.Tests
         {
             var log = new Mock<ILog>();
 
-            var tableStorageEntityStore = new TableStorageEntityStore<TableEntity>(log.Object, "TestConnection", "TableName");
+            var tableStorageEntityStore = new TableStorageEntityStore<TableStorageEntity>(log.Object, "TestConnection", "TableName");
 
-            var ex = await Assert.ThrowsAsync<ArgumentNullException>(() => tableStorageEntityStore.DeleteAsync(null));
+            var ex = await Assert.ThrowsAsync<ArgumentNullException>(() => tableStorageEntityStore.DeleteAsync<TableStorageEntity>(null));
 
             Assert.Equal("Value cannot be null.\r\nParameter name: item", ex.Message);
         }
@@ -66,9 +66,9 @@ namespace NxtLvl.Azure.Data.Tests
         {
             var log = new Mock<ILog>();
 
-            var tableStorageEntityStore = new TableStorageEntityStore<TableEntity>(log.Object, "TestConnection", "TableName");
+            var tableStorageEntityStore = new TableStorageEntityStore<TableStorageEntity>(log.Object, "TestConnection", "TableName");
 
-            var ex = await Assert.ThrowsAsync<ArgumentNullException>(() => tableStorageEntityStore.UpdateAsync(null));
+            var ex = await Assert.ThrowsAsync<ArgumentNullException>(() => tableStorageEntityStore.UpdateAsync<TableStorageEntity>(null));
 
             Assert.Equal("Value cannot be null.\r\nParameter name: item", ex.Message);
         }
@@ -78,9 +78,9 @@ namespace NxtLvl.Azure.Data.Tests
         {
             var log = new Mock<ILog>();
 
-            var tableStorageEntityStore = new TableStorageEntityStore<TableEntity>(log.Object, "TestConnection", "TableName");
+            var tableStorageEntityStore = new TableStorageEntityStore<TableStorageEntity>(log.Object, "TestConnection", "TableName");
 
-            var ex = await Assert.ThrowsAsync<ArgumentNullException>(() => tableStorageEntityStore.FindAsync(null));
+            var ex = await Assert.ThrowsAsync<ArgumentNullException>(() => tableStorageEntityStore.FindAsync<TableStorageEntity>(null));
 
             Assert.Equal("Value cannot be null.\r\nParameter name: query", ex.Message);
         }

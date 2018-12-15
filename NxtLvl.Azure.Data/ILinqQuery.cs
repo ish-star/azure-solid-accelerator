@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace NxtLvl.Azure.Data
 {
-    public interface ILinqQuery<TItem>
+    public interface ILinqQuery
     {
-        Task<IList<TItem>> FindAsync(Expression<Func<TItem, bool>> predicate);
+        Task<IList<TItem>> FindAsync<TItem>(Expression<Func<TItem, bool>> predicate);
     }
 }

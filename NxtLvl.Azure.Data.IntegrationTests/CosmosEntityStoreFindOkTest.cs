@@ -8,7 +8,7 @@ namespace NxtLvl.Azure.Data.IntegrationTests
     [TestClass]
     public class CosmosEntityStoreFindOkTest
     {
-        CosmosEntityStore<TestCosmosEntity> _cosmosEntityStore;
+        CosmosEntityStore<CosmosDocument> _cosmosEntityStore;
         TestCosmosEntity _result1, _result2, _result3;
 
         [TestInitialize]
@@ -16,11 +16,11 @@ namespace NxtLvl.Azure.Data.IntegrationTests
         {
             var log = LogManager.GetLogger(GetType());
 
-            _cosmosEntityStore = new CosmosEntityStore<TestCosmosEntity>(log,
-                                                                         Configuration.GetComsosConfig()["uri"],
-                                                                         Configuration.GetComsosConfig()["authKey"],
-                                                                         Configuration.GetComsosConfig()["databaseName"],
-                                                                         Configuration.GetComsosConfig()["collectionName"]);
+            _cosmosEntityStore = new CosmosEntityStore<CosmosDocument>(log,
+                                                                        Configuration.GetComsosConfig()["uri"],
+                                                                        Configuration.GetComsosConfig()["authKey"],
+                                                                        Configuration.GetComsosConfig()["databaseName"],
+                                                                        Configuration.GetComsosConfig()["collectionName"]);
             await _cosmosEntityStore.Initialize();
 
             var testEntity = new TestCosmosEntity() { StringField = "TestString" };
@@ -39,7 +39,7 @@ namespace NxtLvl.Azure.Data.IntegrationTests
         [TestMethod]
         public async Task CosmosEntityStoreFind_Ok()
         {
-            var foundEntities = await _cosmosEntityStore.FindAsync(x => x.StringField == "TestString");
+            var foundEntities = await _cosmosEntityStore.FindAsync<TestCosmosEntity>(x => x.StringField == "TestString");
 
             Assert.AreEqual(2, foundEntities.Count);
             Assert.AreEqual(_result1.Id, foundEntities[0].Id);

@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 
 namespace NxtLvl.Azure.Data
 {
-    public interface ITableQuery<TItem>
-        where TItem : ITableEntity, new()
+    public interface ITableQuery
     {
-        Task<IList<TItem>> FindAsync(TableQuery<TItem> query);
+        Task<IList<TItem>> FindAsync<TItem>(TableQuery<TItem> query)
+            where TItem : TableStorageEntity, new();
     }
 }

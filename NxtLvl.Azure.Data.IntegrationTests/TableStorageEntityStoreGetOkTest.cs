@@ -30,7 +30,7 @@ namespace NxtLvl.Azure.Data.IntegrationTests
         [TestMethod]
         public async Task TableStorageEntityStoreGet_Ok()
         {
-            var gotten = await _tableStorageEntityStore.GetAsync(_result.Id);
+            var gotten = await _tableStorageEntityStore.GetAsync<TestTableStorageEntity>(_result.Id);
 
             Assert.AreEqual(_result.PartitionKey, gotten.PartitionKey);
             Assert.AreEqual(_result.RowKey, gotten.RowKey);

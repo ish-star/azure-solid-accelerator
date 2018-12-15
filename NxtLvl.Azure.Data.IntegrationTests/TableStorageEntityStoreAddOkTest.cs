@@ -9,7 +9,7 @@ namespace NxtLvl.Azure.Data.IntegrationTests
     [TestClass]
     public class TableStorageEntityStoreAddOkTest
     {
-        TableStorageEntityStore<TestTableStorageEntity> _tableStorageEntityStore;
+        TableStorageEntityStore<TableStorageEntity> _tableStorageEntityStore;
         TestTableStorageEntity _result;
 
         [TestInitialize]
@@ -17,7 +17,7 @@ namespace NxtLvl.Azure.Data.IntegrationTests
         {
             var log = LogManager.GetLogger(GetType());
 
-            _tableStorageEntityStore = new TableStorageEntityStore<TestTableStorageEntity>(log,
+            _tableStorageEntityStore = new TableStorageEntityStore<TableStorageEntity>(log,
                                                                                            Configuration.GetTableStorageConfig()["connection"],
                                                                                            Configuration.GetTableStorageConfig()["tableName"]);
             await _tableStorageEntityStore.Initialize();
@@ -34,7 +34,7 @@ namespace NxtLvl.Azure.Data.IntegrationTests
             Assert.AreEqual(testEntity.RowKey, _result.RowKey);
             Assert.AreEqual(testEntity.StringField, _result.StringField);
 
-            var gotten = await _tableStorageEntityStore.GetAsync(_result.Id);
+            var gotten = await _tableStorageEntityStore.GetAsync<TestTableStorageEntity>(_result.Id);
 
             Assert.AreEqual(testEntity.PartitionKey, gotten.PartitionKey);
             Assert.AreEqual(testEntity.RowKey, gotten.RowKey);

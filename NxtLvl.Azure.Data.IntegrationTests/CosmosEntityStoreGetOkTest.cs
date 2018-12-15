@@ -31,7 +31,7 @@ namespace NxtLvl.Azure.Data.IntegrationTests
         [TestMethod]
         public async Task CosmosEntityStoreGet_Ok()
         {
-            var gotten = await _cosmosEntityStore.GetAsync(_result.Id.Value);
+            var gotten = await _cosmosEntityStore.GetAsync<TestCosmosEntity>(_result.Id.Value);
 
             Assert.AreEqual(_result.Id, gotten.Id);
             Assert.AreEqual(_result.SystemType, gotten.SystemType);

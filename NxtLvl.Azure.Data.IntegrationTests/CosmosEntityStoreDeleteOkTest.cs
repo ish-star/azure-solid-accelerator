@@ -11,7 +11,7 @@ namespace NxtLvl.Azure.Data.IntegrationTests
     [TestClass]
     public class CosmosEntityStoreDeleteOkTest
     {
-        CosmosEntityStore<TestCosmosEntity> _cosmosEntityStore;
+        CosmosEntityStore<CosmosDocument> _cosmosEntityStore;
         TestCosmosEntity _result;
 
         [TestInitialize]
@@ -19,11 +19,11 @@ namespace NxtLvl.Azure.Data.IntegrationTests
         {
             var log = LogManager.GetLogger(GetType());
 
-            _cosmosEntityStore = new CosmosEntityStore<TestCosmosEntity>(log,
-                                                                         Configuration.GetComsosConfig()["uri"],
-                                                                         Configuration.GetComsosConfig()["authKey"],
-                                                                         Configuration.GetComsosConfig()["databaseName"],
-                                                                         Configuration.GetComsosConfig()["collectionName"]);
+            _cosmosEntityStore = new CosmosEntityStore<CosmosDocument>(log,
+                                                                        Configuration.GetComsosConfig()["uri"],
+                                                                        Configuration.GetComsosConfig()["authKey"],
+                                                                        Configuration.GetComsosConfig()["databaseName"],
+                                                                        Configuration.GetComsosConfig()["collectionName"]);
             await _cosmosEntityStore.Initialize();
 
             var testEntity = new TestCosmosEntity() { StringField = "TestString" };
@@ -42,7 +42,7 @@ namespace NxtLvl.Azure.Data.IntegrationTests
 
             try
             {
-                var notExpectedResult = await _cosmosEntityStore.GetAsync(_result.Id.Value);
+                var notExpectedResult = await _cosmosEntityStore.GetAsync<TestCosmosEntity>(_result.Id.Value);
 
                 Assert.Fail("A DocumentClientException was expected to be thrown but no exception was thrown.");
             }

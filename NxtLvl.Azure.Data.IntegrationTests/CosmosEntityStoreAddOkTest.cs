@@ -8,7 +8,7 @@ namespace NxtLvl.Azure.Data.IntegrationTests
     [TestClass]
     public class CosmosEntityStoreAddOkTest
     {
-        CosmosEntityStore<TestCosmosEntity> _cosmosEntityStore;
+        CosmosEntityStore<CosmosDocument> _cosmosEntityStore;
         TestCosmosEntity _result;
 
         [TestInitialize]
@@ -16,11 +16,11 @@ namespace NxtLvl.Azure.Data.IntegrationTests
         {
             var log = LogManager.GetLogger(GetType());
 
-            _cosmosEntityStore = new CosmosEntityStore<TestCosmosEntity>(log,
-                                                                         Configuration.GetComsosConfig()["uri"],
-                                                                         Configuration.GetComsosConfig()["authKey"],
-                                                                         Configuration.GetComsosConfig()["databaseName"],
-                                                                         Configuration.GetComsosConfig()["collectionName"]);
+            _cosmosEntityStore = new CosmosEntityStore<CosmosDocument>(log,
+                                                                        Configuration.GetComsosConfig()["uri"],
+                                                                        Configuration.GetComsosConfig()["authKey"],
+                                                                        Configuration.GetComsosConfig()["databaseName"],
+                                                                        Configuration.GetComsosConfig()["collectionName"]);
             await _cosmosEntityStore.Initialize();
         }
 
@@ -35,7 +35,7 @@ namespace NxtLvl.Azure.Data.IntegrationTests
             Assert.IsNotNull(_result.SystemType);
             Assert.AreEqual(testEntity.StringField, _result.StringField);
 
-            var gotten = await _cosmosEntityStore.GetAsync(_result.Id.Value);
+            var gotten = await _cosmosEntityStore.GetAsync<TestCosmosEntity>(_result.Id.Value);
 
             Assert.AreEqual(_result.Id, gotten.Id);
             Assert.AreEqual(_result.SystemType, gotten.SystemType);

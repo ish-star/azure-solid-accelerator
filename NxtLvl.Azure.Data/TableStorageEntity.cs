@@ -2,7 +2,7 @@
 
 namespace NxtLvl.Azure.Data
 {
-    public abstract class TableStorageEntity : TableEntity
+    public class TableStorageEntity : TableEntity
     {
         public TableStorageId Id { get { return new TableStorageId(PartitionKey, RowKey); } }
 

@@ -35,7 +35,7 @@ namespace NxtLvl.Azure.Data.IntegrationTests
             Assert.AreEqual(_result.Id, deleted.Id);
             Assert.AreEqual(_result.StringField, deleted.StringField);
 
-            var notExpectedResult = await _tableStorageEntityStore.GetAsync(_result.Id);
+            var notExpectedResult = await _tableStorageEntityStore.GetAsync<TestTableStorageEntity>(_result.Id);
 
             Assert.IsNull(notExpectedResult);
         }

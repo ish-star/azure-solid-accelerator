@@ -27,7 +27,7 @@ namespace NxtLvl.Azure.Data.IntegrationTests
         [TestMethod]
         public async Task TableStorageEntityStoreGet_NotFound()
         {
-            var notExpectedResult = await _tableStorageEntityStore.GetAsync(_testEntity.Id);
+            var notExpectedResult = await _tableStorageEntityStore.GetAsync<TestTableStorageEntity>(_testEntity.Id);
 
             Assert.IsNull(notExpectedResult);
         }

@@ -33,7 +33,7 @@ namespace NxtLvl.Azure.Data.IntegrationTests
             _result.StringField = "NewStringValue";
             _result = await _tableStorageEntityStore.UpdateAsync(_result);
 
-            var gottenAfterUpdate = await _tableStorageEntityStore.GetAsync(_result.Id);
+            var gottenAfterUpdate = await _tableStorageEntityStore.GetAsync<TestTableStorageEntity>(_result.Id);
 
             Assert.AreEqual(_result.Id, gottenAfterUpdate.Id);
             Assert.AreEqual(_result.StringField, gottenAfterUpdate.StringField);

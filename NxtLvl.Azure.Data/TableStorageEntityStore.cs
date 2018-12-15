@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace NxtLvl.Azure.Data
 {
-    public class TableStorageEntityStore<TEntity> : IEntityStore<TEntity, TableStorageId>, ITableQuery<TEntity>
-        where TEntity : class, ITableEntity, new()
+    public class TableStorageEntityStore<TBase> : IEntityStore<TBase, TableStorageId>, ITableQuery
+        where TBase : TableStorageEntity
     {
         readonly string _connection, _tableName;
         readonly ILog _log;
@@ -46,7 +46,8 @@ namespace NxtLvl.Azure.Data
             _initialized = true;
         }
 
-        public async Task<TEntity> AddAsync(TEntity item)
+        public async Task<TEntity> AddAsync<TEntity>(TEntity item)
+            where TEntity : TBase, new()
         {
             Validate.ArgumentIsNotNull(item, nameof(item));
 
@@ -59,7 +60,8 @@ namespace NxtLvl.Azure.Data
             return (TEntity)result.Result;
         }
 
-        public async Task<TEntity> DeleteAsync(TEntity item)
+        public async Task<TEntity> DeleteAsync<TEntity>(TEntity item)
+            where TEntity : TBase, new()
         {
             Validate.ArgumentIsNotNull(item, nameof(item));
 
@@ -72,7 +74,8 @@ namespace NxtLvl.Azure.Data
             return (TEntity)result.Result;
         }
 
-        public async Task<TEntity> GetAsync(TableStorageId id)
+        public async Task<TEntity> GetAsync<TEntity>(TableStorageId id)
+            where TEntity : TBase, new()
         {
             await Initialize();
 
@@ -83,7 +86,8 @@ namespace NxtLvl.Azure.Data
             return (TEntity)result.Result;
         }
 
-        public async Task<TEntity> UpdateAsync(TEntity item)
+        public async Task<TEntity> UpdateAsync<TEntity>(TEntity item)
+            where TEntity : TBase, new()
         {
             Validate.ArgumentIsNotNull(item, nameof(item));
 
@@ -96,13 +100,14 @@ namespace NxtLvl.Azure.Data
             return (TEntity)result.Result;
         }
 
-        public async Task<IList<TEntity>> FindAsync(TableQuery<TEntity> query)
+        public async Task<IList<TItem>> FindAsync<TItem>(TableQuery<TItem> query)
+            where TItem : TableStorageEntity, new()
         {
             Validate.ArgumentIsNotNull(query, nameof(query));
 
             await Initialize();
 
-            var results = new List<TEntity>();
+            var results = new List<TItem>();
             TableContinuationToken token = null;
 
             do
