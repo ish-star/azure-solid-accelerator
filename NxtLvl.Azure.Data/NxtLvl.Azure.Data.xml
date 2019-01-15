@@ -1,0 +1,288 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>NxtLvl.Azure.Data</name>
+    </assembly>
+    <members>
+        <member name="T:NxtLvl.Azure.Data.CosmosDocument">
+            <summary>
+            Base class that can be used when defining Entities to use with the ComsosEntityStore class.
+            </summary>
+        </member>
+        <member name="P:NxtLvl.Azure.Data.CosmosDocument.Id">
+            <summary>
+            The unique identifier of the Entity record.
+            </summary>
+        </member>
+        <member name="P:NxtLvl.Azure.Data.CosmosDocument.SystemType">
+            <summary>
+            The fully qualified name of the type of the Entity record.
+            </summary>
+            <remarks>
+            Can be used to know which class to serialize the record into in your application.
+            </remarks>
+        </member>
+        <member name="M:NxtLvl.Azure.Data.CosmosDocument.ToString">
+            <summary>
+            Provides the JSON serialization representation of the Entity record.
+            </summary>
+            <returns>JSON serialization representation of the Entity record.</returns>
+        </member>
+        <member name="M:NxtLvl.Azure.Data.CosmosDocument.Hydrate(Microsoft.Azure.Documents.Document)">
+            <summary>
+            Converts the CosmosDB Document object to the strongly typed class representation.
+            </summary>
+            <param name="document">The CosmosDB Document that contains the data for the Entity record.</param>
+        </member>
+        <member name="M:NxtLvl.Azure.Data.CosmosDocument.#ctor">
+            <summary>
+            Base class that can be used when defining Entities to use with the ComsosEntityStore class.
+            </summary>
+        </member>
+        <member name="T:NxtLvl.Azure.Data.CosmosEntityStore`1">
+            <summary>
+            Class that encapsluates the complexity of doing simple data interactions with the Azure ComsoDB platform.
+            </summary>
+            <typeparam name="TBase">The base type the CosmosEntityStore is configured to work with.</typeparam>
+        </member>
+        <member name="M:NxtLvl.Azure.Data.CosmosEntityStore`1.#ctor(log4net.ILog,System.String,System.String,System.String,System.String)">
+            <summary>
+            The constructor that specifies the dependencies and metadata concerning the instance of the Azure ComsoDB platform to which you intend to interact.
+            </summary>
+            <param name="log">The log4net's ILog interface which will be used to log class initialization and other events.</param>
+            <param name="uri">The URI value of your CosmsoDB instance to which you want to interact.  Available in the Azure Portal.</param>
+            <param name="authKey">The Authentication Key to allow access to your CosmosDB instance.</param>
+            <param name="databaseName">The name of the database instance inside your CosmosDB instance to which you want to interact.</param>
+            <param name="collectionName">The name of the collection instance inside your database instance to which you want to interact.</param>
+        </member>
+        <member name="M:NxtLvl.Azure.Data.CosmosEntityStore`1.Initialize">
+            <summary>
+            Uses the information provided in the constructor to access your CosmsoDB instance and ensures a connection can be made.  This method also ensures that the database and collection exist and are ready to accept data interactions.
+            </summary>
+            <remarks>
+            This method should be called only once per instance.  It is recommended to call this method during the initialization or dependency configuration stage of your application to warm up the underlying components to avoid cold call latency.
+            </remarks>
+        </member>
+        <member name="M:NxtLvl.Azure.Data.CosmosEntityStore`1.AddAsync``1(``0)">
+            <summary>
+            Add the provided Entity to the CosmosDB table.
+            </summary>
+            <typeparam name="TEntity">The type to be used in this method invocation.</typeparam>
+            <param name="item">The Entity to add.</param>
+            <returns>The added Entity.</returns>
+        </member>
+        <member name="M:NxtLvl.Azure.Data.CosmosEntityStore`1.DeleteAsync``1(``0)">
+            <summary>
+            Delete the provided Entity from the CosmosDB table.
+            </summary>
+            <typeparam name="TEntity">The type to be used in this method invocation.</typeparam>
+            <param name="item">The Entity to delete.</param>
+            <returns>The deleted Entity.</returns>
+        </member>
+        <member name="M:NxtLvl.Azure.Data.CosmosEntityStore`1.GetAsync``1(System.Guid)">
+            <summary>
+            Get the Entity associated with the provided Id from the CosmosDB table.
+            </summary>
+            <typeparam name="TEntity">The type to be used in this method invocation.</typeparam>
+            <param name="id">The Id value of the Entity to get.</param>
+            <returns>The Entity associated with the provided Id value.</returns>
+        </member>
+        <member name="M:NxtLvl.Azure.Data.CosmosEntityStore`1.UpdateAsync``1(``0)">
+            <summary>
+            Update the provided Entity in the CosmosDB table.
+            </summary>
+            <typeparam name="TEntity">The type to be used in this method invocation.</typeparam>
+            <param name="item">The Entity to update.</param>
+            <returns>The updated Entity.</returns>
+        </member>
+        <member name="M:NxtLvl.Azure.Data.CosmosEntityStore`1.FindAsync``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+            <summary>
+            Find any Entities that satisfy the conditions provided in the Linq predicate from the CosmosDB table.
+            </summary>
+            <typeparam name="TEntity">The type to be used in this method invocation.</typeparam>
+            <param name="predicate">The condition the Entities must satifsy.</param>
+            <returns>The Entities that satisfy the condition specified.</returns>
+        </member>
+        <member name="T:NxtLvl.Azure.Data.IEntityStore`2">
+            <summary>
+            Interface for a generic storage of application Entities.
+            </summary>
+            <typeparam name="TBase">The base type the implementation is configured to work with.</typeparam>
+            <typeparam name="TId">The type of the Id used by the implementation of this interface.</typeparam>
+        </member>
+        <member name="M:NxtLvl.Azure.Data.IEntityStore`2.AddAsync``1(``0)">
+            <summary>
+            Add the provided Entity to the Entity Store.
+            </summary>
+            <typeparam name="TEntity">The type to be used in this method invocation.</typeparam>
+            <param name="item">The Entity to add.</param>
+            <returns>The added Entity.</returns>
+        </member>
+        <member name="M:NxtLvl.Azure.Data.IEntityStore`2.DeleteAsync``1(``0)">
+            <summary>
+            Delete the provided Entity from the Entity Store.
+            </summary>
+            <typeparam name="TEntity">The type to be used in this method invocation.</typeparam>
+            <param name="item">The Entity to delete.</param>
+            <returns>The deleted Entity.</returns>
+        </member>
+        <member name="M:NxtLvl.Azure.Data.IEntityStore`2.GetAsync``1(`1)">
+            <summary>
+            Get the Entity associated with the provided Id from the Entity Store.
+            </summary>
+            <typeparam name="TEntity">The type to be used in this method invocation.</typeparam>
+            <param name="id">The Id value of the Entity to get.</param>
+            <returns>The Entity associated with the provided Id value.</returns>
+        </member>
+        <member name="M:NxtLvl.Azure.Data.IEntityStore`2.UpdateAsync``1(``0)">
+            <summary>
+            Add the provided Entity to the Entity Store.
+            </summary>
+            <typeparam name="TEntity">The type to be used in this method invocation.</typeparam>
+            <param name="item">The Entity to add.</param>
+            <returns>The added Entity.</returns>
+        </member>
+        <member name="M:NxtLvl.Azure.Data.ILinqQuery.FindAsync``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+            <summary>
+            Find any Entities that satisfy the conditions provided in the Linq predicate from the CosmosDB table.
+            </summary>
+            <typeparam name="TEntity">The type to be used in this method invocation.</typeparam>
+            <param name="predicate">The condition the Entities must satifsy.</param>
+            <returns>The Entities that satisfy the condition specified.</returns>
+        </member>
+        <member name="M:NxtLvl.Azure.Data.ITableQuery.FindAsync``1(Microsoft.WindowsAzure.Storage.Table.TableQuery{``0})">
+            <summary>
+            Searches for records that meet the criteria specified in the predicate.
+            </summary>
+            <typeparam name="TItem">The type to be used in this method invocation.</typeparam>
+            <param name="query">The criteria to be used in the query operation.</param>
+            <returns>Any records that meet the search criteria cast into the type specified by the TItem type parameter.</returns>
+        </member>
+        <member name="T:NxtLvl.Azure.Data.TableStorageEntity">
+            <summary>
+            Base class that can be used when defining Entities to use with the Azure Table Storage platform.
+            </summary>
+        </member>
+        <member name="P:NxtLvl.Azure.Data.TableStorageEntity.Id">
+            <summary>
+            The identifier of the table storage record.
+            </summary>
+        </member>
+        <member name="M:NxtLvl.Azure.Data.TableStorageEntity.#ctor">
+            <summary>
+            Base class that can be used when defining Entities to use with the Azure Table Storage platform.
+            </summary>
+        </member>
+        <member name="M:NxtLvl.Azure.Data.TableStorageEntity.#ctor(NxtLvl.Azure.Data.TableStorageId)">
+            <summary>
+            Base class that can be used when defining Entities to use with the Azure Table Storage platform.
+            </summary>
+            <param name="id">The identifier of the table storage record.</param>
+        </member>
+        <member name="T:NxtLvl.Azure.Data.TableStorageEntityStore`1">
+            <summary>
+            Class that encapsluates the complexity of doing simple data interactions with the Azure TableStorage platform.
+            </summary>
+            <typeparam name="TBase">The base type the CosmosEntityStore is configured to work with.</typeparam>
+        </member>
+        <member name="M:NxtLvl.Azure.Data.TableStorageEntityStore`1.#ctor(log4net.ILog,System.String,System.String)">
+            <summary>
+            The constructor that specifies the dependencies and metadata concerning the instance of the Azure TableStorage platform to which you intend to interact.
+            </summary>
+            <param name="log">The log4net's ILog interface which will be used to log class initialization and other events.</param>
+            <param name="connection">The connection string for the TableStorage instance to which you want to interact.</param>
+            <param name="tableName">The name of the Table within the TableStorage instance to which you want to interact.</param>
+        </member>
+        <member name="M:NxtLvl.Azure.Data.TableStorageEntityStore`1.Initialize">
+            <summary>
+            Uses the information provided in the constructor to access your TableStorage instance and ensures a connection can be made.  This method also ensures that the database and collection exist and are ready to accept data interactions.
+            </summary>
+            <remarks>
+            This method should be called only once per instance.  It is recommended to call this method during the initialization or dependency configuration stage of your application to warm up the underlying components to avoid cold call latency.
+            </remarks>
+        </member>
+        <member name="M:NxtLvl.Azure.Data.TableStorageEntityStore`1.AddAsync``1(``0)">
+            <summary>
+            Add the provided Entity to the TableStorage table.
+            </summary>
+            <typeparam name="TEntity">The type to be used in this method invocation.</typeparam>
+            <param name="item">The Entity to add.</param>
+            <returns>The added Entity.</returns>
+        </member>
+        <member name="M:NxtLvl.Azure.Data.TableStorageEntityStore`1.DeleteAsync``1(``0)">
+            <summary>
+            Delete the provided Entity from the TableStorage table.
+            </summary>
+            <typeparam name="TEntity">The type to be used in this method invocation.</typeparam>
+            <param name="item">The Entity to delete.</param>
+            <returns>The deleted Entity.</returns>
+        </member>
+        <member name="M:NxtLvl.Azure.Data.TableStorageEntityStore`1.GetAsync``1(NxtLvl.Azure.Data.TableStorageId)">
+            <summary>
+            Get the Entity associated with the provided Id from the TableStorage table.
+            </summary>
+            <typeparam name="TEntity">The type to be used in this method invocation.</typeparam>
+            <param name="id">The Id value of the Entity to get.</param>
+            <returns>The Entity associated with the provided Id value.</returns>
+        </member>
+        <member name="M:NxtLvl.Azure.Data.TableStorageEntityStore`1.UpdateAsync``1(``0)">
+            <summary>
+            Add the provided Entity to the CosmosDB table.
+            </summary>
+            <typeparam name="TEntity">The type to be used in this method invocation.</typeparam>
+            <param name="item">The Entity to update.</param>
+            <returns>The updated Entity.</returns>
+        </member>
+        <member name="M:NxtLvl.Azure.Data.TableStorageEntityStore`1.FindAsync``1(Microsoft.WindowsAzure.Storage.Table.TableQuery{``0})">
+            <summary>
+            Searches for records that meet the criteria specified in the predicate.
+            </summary>
+            <typeparam name="TItem">The type to be used in this method invocation.</typeparam>
+            <param name="query">The criteria to be used in the query operation.</param>
+            <returns>Any records that meet the search criteria cast into the type specified by the TItem type parameter.</returns>
+        </member>
+        <member name="T:NxtLvl.Azure.Data.TableStorageId">
+            <summary>
+            A structure representing the primary key for all Azure TableStorage records.
+            </summary>
+        </member>
+        <member name="P:NxtLvl.Azure.Data.TableStorageId.PartitionKey">
+            <summary>
+            Tables are partitioned to support load balancing across storage nodes. A table's entities are organized by partition. A partition is a consecutive range of entities possessing the same partition key value. The partition key is a unique identifier for the partition within a given table, specified by the PartitionKey property. The partition key forms the first part of an entity's primary key. The partition key may be a string value up to 1 KB in size.
+            </summary>
+            <seealso cref="!:https://docs.microsoft.com/en-us/rest/api/storageservices/understanding-the-table-service-data-model#partitionkey-property"/>
+            <remarks>
+            You must include the PartitionKey property in every insert, update, and delete operation.
+            </remarks>
+        </member>
+        <member name="P:NxtLvl.Azure.Data.TableStorageId.RowKey">
+            <summary>
+            The second part of the primary key is the row key, specified by the RowKey property. The row key is a unique identifier for an entity within a given partition. Together the PartitionKey and RowKey uniquely identify every entity within a table.  The row key is a string value that may be up to 1 KB in size.
+            </summary>
+            <seealso cref="!:https://docs.microsoft.com/en-us/rest/api/storageservices/understanding-the-table-service-data-model#rowkey-property"/>
+            <remarks>
+            You must include the RowKey property in every insert, update, and delete operation.
+            </remarks>
+        </member>
+        <member name="M:NxtLvl.Azure.Data.TableStorageId.#ctor(System.String,System.String)">
+            <summary>
+            A structure representing the primary key for all Azure TableStorage records.
+            </summary>
+            <param name="partitionKey">The first part of the primary key of the TableStorage record.</param>
+            <param name="rowKey">The second part of the primary key of the TableStorage record.</param>
+        </member>
+        <member name="M:NxtLvl.Azure.Data.TableStorageId.Equals(System.Object)">
+            <summary>
+            Indicates whether this instance and a specified object are equal.
+            </summary>
+            <param name="obj">The object to compare with the current instance.</param>
+            <returns>true if obj and this instance are the same type and represent the same value; otherwise, false.</returns>
+        </member>
+        <member name="M:NxtLvl.Azure.Data.TableStorageId.GetHashCode">
+            <summary>
+            Returns the hash code for this instance.
+            </summary>
+            <returns>A 32-bit signed integer that is the hash code for this instance.</returns>
+        </member>
+    </members>
+</doc>

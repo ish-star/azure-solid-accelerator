@@ -11,7 +11,7 @@ using NxtLvl.Core.Common;
 namespace NxtLvl.Azure.Data
 {
     /// <summary>
-    /// Class that encapsluates the complexity of doing simple interactions with the Azure ComsoDB platform.
+    /// Class that encapsluates the complexity of doing simple data interactions with the Azure ComsoDB platform.
     /// </summary>
     /// <typeparam name="TBase">The base type the CosmosEntityStore is configured to work with.</typeparam>
     public class CosmosEntityStore<TBase> : IEntityStore<TBase, Guid>, ILinqQuery
@@ -33,9 +33,9 @@ namespace NxtLvl.Azure.Data
         #region constructor
 
         /// <summary>
-        /// The constructor for the CosmosEntityStore class specifying the dependencies and information needed about the Azure ComsoDB platform instance to which you intend to interact.
+        /// The constructor that specifies the dependencies and metadata concerning the instance of the Azure ComsoDB platform to which you intend to interact.
         /// </summary>
-        /// <param name="log">log4net's ILog interface which will be used to log class initialization and other events.</param>
+        /// <param name="log">The log4net's ILog interface which will be used to log class initialization and other events.</param>
         /// <param name="uri">The URI value of your CosmsoDB instance to which you want to interact.  Available in the Azure Portal.</param>
         /// <param name="authKey">The Authentication Key to allow access to your CosmosDB instance.</param>
         /// <param name="databaseName">The name of the database instance inside your CosmosDB instance to which you want to interact.</param>
@@ -64,7 +64,7 @@ namespace NxtLvl.Azure.Data
         #region public methods
 
         /// <summary>
-        /// Uses the information provided in the constructor on how to access your CosmsoDB instance, and ensures a connection can be made and that the database and collection exist and are ready to accept data interactions.
+        /// Uses the information provided in the constructor to access your CosmsoDB instance and ensures a connection can be made.  This method also ensures that the database and collection exist and are ready to accept data interactions.
         /// </summary>
         /// <remarks>
         /// This method should be called only once per instance.  It is recommended to call this method during the initialization or dependency configuration stage of your application to warm up the underlying components to avoid cold call latency.
@@ -154,26 +154,11 @@ namespace NxtLvl.Azure.Data
         }
 
         /// <summary>
-        /// Find any Entities that satisfy the conditions provided in the Linq predicate from the CosmosDB table.
+        /// Update the provided Entity in the CosmosDB table.
         /// </summary>
         /// <typeparam name="TEntity">The type to be used in this method invocation.</typeparam>
-        /// <param name="predicate">The condition the Entities must satifsy.</param>
-        /// <returns>The Entities that satisfy the condition specified.</returns>
-        public async Task<IList<TItem>> FindAsync<TItem>(Expression<Func<TItem, bool>> predicate)
-        {
-            Validate.ArgumentIsNotNull(predicate, nameof(predicate));
-
-            await Initialize();
-
-            return await Task.Run(() => _client.CreateDocumentQuery<TItem>(_collection.DocumentsLink).Where(predicate).ToList());
-        }
-
-        /// <summary>
-        /// Add the provided Entity to the CosmosDB table.
-        /// </summary>
-        /// <typeparam name="TEntity">The type to be used in this method invocation.</typeparam>
-        /// <param name="item">The Entity to add.</param>
-        /// <returns>The added Entity.</returns>
+        /// <param name="item">The Entity to update.</param>
+        /// <returns>The updated Entity.</returns>
         public async Task<TEntity> UpdateAsync<TEntity>(TEntity item)
             where TEntity : TBase, new()
         {
@@ -196,6 +181,21 @@ namespace NxtLvl.Azure.Data
             var response = new TEntity();
             response.Hydrate(result.Resource);
             return response;
+        }
+
+        /// <summary>
+        /// Find any Entities that satisfy the conditions provided in the Linq predicate from the CosmosDB table.
+        /// </summary>
+        /// <typeparam name="TEntity">The type to be used in this method invocation.</typeparam>
+        /// <param name="predicate">The condition the Entities must satifsy.</param>
+        /// <returns>The Entities that satisfy the condition specified.</returns>
+        public async Task<IList<TItem>> FindAsync<TItem>(Expression<Func<TItem, bool>> predicate)
+        {
+            Validate.ArgumentIsNotNull(predicate, nameof(predicate));
+
+            await Initialize();
+
+            return await Task.Run(() => _client.CreateDocumentQuery<TItem>(_collection.DocumentsLink).Where(predicate).ToList());
         }
 
         #endregion
