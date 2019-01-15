@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <AssemblyName>NxtLvl.Azure.Data</AssemblyName>
+    <RootNamespace>NxtLvl.Azure.Data</RootNamespace>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>Michael Griehm</Authors>
+    <Company>NxtLvl Technologies</Company>
+    <Description>A set of components to accelerate the implementation of Azure based projects that make following SOLID principles easier and more natural.</Description>
+    <PackageLicenseUrl>https://github.com/ish-star/azure-solid-accelerator/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/ish-star/azure-solid-accelerator/projects/1</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/ish-star/azure-solid-accelerator</RepositoryUrl>
+    <RepositoryType>c#</RepositoryType>
+    <PackageTags>Azure, CosmosDB, TableStorage, SOILD, Inversion of Control, IoC, Data Repositoy</PackageTags>
+    <PackageReleaseNotes>The initial release with classes that enable easy interaction with Microsoft Azure's TableStorage and ComsoDB data repository platforms.</PackageReleaseNotes>
+    <NeutralLanguage>en</NeutralLanguage>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>C:\Coding\Repos\azure-solid-accelerator\NxtLvl.Azure.Data\NxtLvl.Azure.Data.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="log4net" Version="2.0.8" />
+    <PackageReference Include="Microsoft.Azure.DocumentDB.Core" Version="2.2.1" />
+    <PackageReference Include="NxtLvl.Core.Common" Version="1.1.1" />
+    <PackageReference Include="WindowsAzure.Storage" Version="9.3.3" />
+  </ItemGroup>
+
+</Project>
